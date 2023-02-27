@@ -3,15 +3,27 @@ package hello.jdbc.repository;
 import hello.jdbc.connection.DBConnectionUtil;
 import hello.jdbc.domain.Member;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.support.JdbcUtils;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.NoSuchElementException;
 
 /**
- * JDBC - DriverManager 사용해서 "저장"해보자.
+ * JDBC - DataSource 사용, JdbcUtils 사용
  */
 @Slf4j
-public class MemberRepositoryV0 {
+public class MemberRepositoryV1 {
+
+    //스프링에는 기본적으로 DataSource의 구현체로 HikariCP가 빈으로 등록되어있고, 그것이 주입된다.
+    //여기서는 DataSource가 스프링 컨테이너가 구동 시 설정파일을 확인하고 자동으로 빈으로 생성한다.
+    private final DataSource dataSource;
+
+    @Autowired
+    public MemberRepositoryV1(DataSource dataSource) {      //주입을 받았다.
+        this.dataSource = dataSource;
+    }
 
     public Member save(Member member) throws SQLException {
         String sql = "insert into member(member_id,money) values(?,?)";
@@ -111,31 +123,17 @@ public class MemberRepositoryV0 {
     }
 
     private void close(Connection con, Statement stmt, ResultSet rs) {      //항상 역순으로 close ()
-        if(rs!=null){
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                log.info("Error", e);
-            }
-        }
-        if(stmt != null){
-            try {
-                stmt.close();       // SQLException이 터지면?? 터진다 하더라도 catch로 잡아버린다. 그럼 여기서 끝나기 때문에 con에 영향을 주지 않는다.
-            } catch (SQLException e) {
-                log.info("Error", e);
-            }
-        }
-        if(con!=null){
-            try {
-                con.close();
-            } catch (SQLException e) {
-                log.info("Error", e);
-            }
-        }
-
+        
+        //기존 코드를 대체 내부를 봐라.
+        
+        JdbcUtils.closeResultSet(rs);
+        JdbcUtils.closeStatement(stmt);
+        JdbcUtils.closeConnection(con);
     }
 
-    private static Connection getConnection() {
-        return DBConnectionUtil.getConnection();
+    private  Connection getConnection() throws SQLException {       //더이상 DBConnectionUtil을 사용하지 않아도 됨.
+        Connection con = dataSource.getConnection();
+        log.info("get connection ={} class={}", con, con.getClass());
+        return con;
     }
 }

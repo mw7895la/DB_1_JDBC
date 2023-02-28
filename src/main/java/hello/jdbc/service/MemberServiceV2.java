@@ -31,8 +31,10 @@ public class MemberServiceV2 {
         // from에서 to에게 얼마 보낼꺼냐
         //트랜잭션 시작.
         Connection con = dataSource.getConnection();
+        log.info("conn ={}",con);
         try{
             con.setAutoCommit(false);       //트랜잭션의 시작. 우리가 H2DB에서 실제 했던것.
+
             //비즈니스 로직  ( 커넥션도 같이 넘기자.
             Member fromMember = memberRepository.findById(con,fromId);              //con Argument 추가
             Member toMember = memberRepository.findById(con,toId);
@@ -43,7 +45,6 @@ public class MemberServiceV2 {
             validation(toMember);           //1번 업데이트 후 검증에 문제 생기면 2번으로 못 넘어감.
 
             memberRepository.update(con,toId, toMember.getMoney() + money);     // 2번 업데이트
-
 
             //위에 로직이 정상적으로 수행되었다면,
             con.commit();  //성공 시, Commit 한다.

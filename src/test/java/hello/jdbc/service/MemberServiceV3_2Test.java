@@ -37,6 +37,10 @@ public class MemberServiceV3_2Test {
     @BeforeEach
     void before() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
+        //spring의 DriverManagerDataSource 사용
+        //- DriverManagerDataSource 도 POOL 처리가 안되는 듯 함
+        //- 표준 DataSource 인터페이스의 구현체
+        //- 매번 새로운 Connection을 반환
 
         PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource); //JDBC와 관련된 트랜잭션 매니저를 주입.
         //구현체인 DataSourceTransactionManager를 통해서 트랜잭션을 획득한다.

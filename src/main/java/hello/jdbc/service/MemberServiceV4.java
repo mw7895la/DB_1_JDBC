@@ -1,6 +1,8 @@
 package hello.jdbc.service;
 
 import hello.jdbc.domain.Member;
+import hello.jdbc.repository.MemberRepository;
+import hello.jdbc.repository.MemberRepositoryEx;
 import hello.jdbc.repository.MemberRepositoryV3;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,28 +10,34 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 
 /**
- * 트랜잭션 - @Transactional AOP
+ * 예외 누수 문제 해결
+ * SQLException이 제거될 것.
+ *
+ * MemberRepository 인터페이스에 의존하는 것으로 바꾸자.
  */
 @Slf4j
-public class MemberServiceV3_3 {
+public class MemberServiceV4 {
 
-    private final MemberRepositoryV3 memberRepository;      //이건 구체 클래스에 의존한거다 실제론 인터페이스로...
-    //private final PlatformTransactionManager transactionManager;
+    private final MemberRepository memberRepository;
+
 
 
     //생성자 만들자 위에 어노테이션 주석처리
 
-    public MemberServiceV3_3(MemberRepositoryV3 memberRepository) {
+    public MemberServiceV4(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
 
     }
     @Transactional      //이 어노테이션을 걸면, 스프링이 트랜잭션을 적용하는 프록시를 만들어준다 (AOP 프록시 여기서 트랜잭션 로직 다 처리). 이 메소드 호출될때 트랜잭션 걸고 시작하겠다. 성공하면 커밋 예외터지면 롤백 하겠다.
-    public void accountTransfer(String fromId, String toId, int money) throws SQLException {
+    public void accountTransfer(String fromId, String toId, int money)   {
+        /**
+         * 메서드에 throws SQLException 삭제.
+         */
 
         bizLogic(fromId, toId, money);
     }
 
-    private void bizLogic(String fromId, String toId, int money) throws SQLException {
+    private void bizLogic(String fromId, String toId, int money)   {
         Member fromMember = memberRepository.findById(fromId);
         Member toMember = memberRepository.findById(toId);
 

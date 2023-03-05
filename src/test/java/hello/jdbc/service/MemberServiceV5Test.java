@@ -2,9 +2,8 @@ package hello.jdbc.service;
 
 import hello.jdbc.domain.Member;
 import hello.jdbc.repository.MemberRepository;
-import hello.jdbc.repository.MemberRepositoryV3;
-import hello.jdbc.repository.MemberRepositoryV4_1;
 import hello.jdbc.repository.MemberRepositoryV4_2;
+import hello.jdbc.repository.MemberRepositoryV5;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -17,7 +16,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -30,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  */
 @Slf4j
 @SpringBootTest
-public class MemberServiceV4Test {
+public class MemberServiceV5Test {
 
     public static final String MEMBER_A = "memberA";
     public static final String MEMBER_B = "memberB";
@@ -58,7 +56,7 @@ public class MemberServiceV4Test {
 
         @Bean
         MemberRepository memberRepository(){
-            return new MemberRepositoryV4_2(dataSource);
+            return new MemberRepositoryV5(dataSource);
         }
 
         @Bean
@@ -127,7 +125,7 @@ public class MemberServiceV4Test {
     void accountTransferEx()   {
         //given - 이런 데이터들이 준비되있을 때
         Member memberA = new Member(MEMBER_A, 10000);
-        Member MEMBER_EX = new Member(MemberServiceV4Test.MEMBER_EX, 10000);          // MEMBER_EX로 수정
+        Member MEMBER_EX = new Member(MemberServiceV5Test.MEMBER_EX, 10000);          // MEMBER_EX로 수정
         //변수 여러군데 있는거 이름 한번에 바꾸기  Shift + F6
 
 

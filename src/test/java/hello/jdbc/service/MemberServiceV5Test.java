@@ -54,15 +54,23 @@ public class MemberServiceV5Test {
             this.dataSource = dataSource;
         }
 
+
+        //아래 2개는 타입이 같아서 위에 @Autowired한 memberRepository 필드 이름으로 컨테이너에 등록된 빈 이름을 찾음.
+        @Bean
+        MemberRepository memberRepository12(){
+            return new MemberRepositoryV4_2(dataSource);
+        }
+
         @Bean
         MemberRepository memberRepository(){
             return new MemberRepositoryV5(dataSource);
         }
 
         @Bean
-        MemberServiceV4 memberServiceV4(){
+        MemberServiceV4 memberService(){
             return new MemberServiceV4(memberRepository());
         }
+
     }
 
 
@@ -73,6 +81,7 @@ public class MemberServiceV5Test {
     void AopCheck(){
         log.info("memberService class ={}", memberService.getClass());
         log.info("memberRepository class={}", memberRepository.getClass());
+
         /*
         MemberServiceV3_3 에 클래스 단위로든, 메소드 단위로든 @Transactional 이 적용되면 프록시가 생성된다.
         스프링이 코드를 쫙 보고 클래스나 메소드 @Transactioanl이 있으면 넌 AOP 적용 대상이구나 하고 프록시를 만들어서 적용을 해준다.

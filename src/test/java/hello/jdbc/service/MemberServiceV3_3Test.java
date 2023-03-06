@@ -32,6 +32,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Slf4j
 @SpringBootTest
 public class MemberServiceV3_3Test {
+    /**
+     * @SpringBootTest를 사용하면 @SpringBootApplication이 있는 CoreApplication을 찾아서 사용합니다.
+     *
+     * 그리고 이렇게 찾은 @SpringBootApplication 안에는 @ComponentScan이 존재합니다.
+     *
+     * 이곳의 package 위치는 hello.core이기 때문에 우리가 작성한 전에 애플리케이션 코드가 컴포넌트 스캔의 대상이 됩니다. 여기에는 @Configuration도 포함됩니다.
+     *
+     * 그리고 테스트에서 실행했기 때문에 test 중에서도 hello.core를 포함한 그 하위 패키지는 컴포넌트 스캔의 대상이 됩니다.
+     *
+     * 두번째 질문하신 것은 @SpringBootTest가 있으면 해당 테스트 클래스는 특수하게 @Autowired를 허용해줍니다.
+     * 이것은 스프링 빈으로 등록되어서 그런 것은 아니고, JUnit과 스프링이 예외적으로 테스트를 편리하게 하도록 허용하는 기능입니다.
+     */
 
     public static final String MEMBER_A = "memberA";
     public static final String MEMBER_B = "memberB";
@@ -39,9 +51,11 @@ public class MemberServiceV3_3Test {
 
     @Autowired
     private MemberRepositoryV3 memberRepository;
-
+    //@Autowired 는 타입으로 의존성을 주입 // 타입이 여러 개면 필드 또는 파라미터 이름으로 빈 이름을 매칭한다.
+    //@Component, @Service, @Repository 등의 어노테이션을 사용하여 스프링이 관리하는 빈으로 등록을 한 객체를 주입받을 떄 @Autowired를 사용합니다.
+    //아래 @TestConfiguration에서 MemberRepositoryV3 타입을 보고 매칭 하게 된 것.
     @Autowired
-    private MemberServiceV3_3 memberService;
+    private MemberServiceV3_3 memberService;        //얘네 둘 @Autowired만 하면 스프링 빈으로 등록을 아직 전혀 안했다. 그래서 의존관계 주입 자체를 못받는다. 그래서 아래 빈으로 등록 해준것.
 
     //JUnit5 에선 필드주입은 되지만 생성자를 통한 의존성 주입이 안된다.
     // https://pinokio0702.tistory.com/189 참고
@@ -57,10 +71,13 @@ public class MemberServiceV3_3Test {
         PlatformTransactionManager transactionManager(){
             return new DataSourceTransactionManager(dataSource());
         }
+
+        //위에 MemberRepositoryV3 과 MemberServiceV3_3 을 빈으로 등록해준것.
         @Bean
         MemberRepositoryV3 memberRepositoryV3(){
-            return new MemberRepositoryV3(dataSource());
+            return new MemberRepositoryV3(dataSource());        //dataSource() 주입받아서 return 함.
         }
+
 
         @Bean
         MemberServiceV3_3 memberServiceV3_3(){

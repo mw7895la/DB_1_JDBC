@@ -24,7 +24,7 @@ public class MemberServiceV3_1 {
     public void accountTransfer(String fromId, String toId, int money) throws SQLException {
 
         //트랜잭션 시작.
-        //반환된 TransactionStatus는 커밋할때 넣어줘야함.
+        //반환된 TransactionStatus는 커밋이나 롤백 할때 넣어줘야함.
         // V3_1Test에서 구현체인 DataSourceTransactionManager를 통해서 트랜잭션을 획득한다. 트랜잭션 매니저는 데이터소스를 알고 있다.  데이터소스를 통해서 커넥션을 생성, 셋오토커밋 펄스도 하고, 트랜잭션 동기화 매니저에 보관한다.
         //그 다음에 로직을 수행하는데 findById() 를 수행한다 하자. 커넥션 획득하는데,어디서 획득? DataSourceUtils.getConnection(dataSource)하면  리포지토리에서 트랜잭션 동기화 매니저의 트랜잭션 시작한 커넥션을 획득하고 로직을 수행한다.
         //로직을 다 수행하고 트랜잭션 매니저가 커밋이나 롤백을 하면 리소스를 다 릴리즈하고 트랜잭션 동기화 매니저에도 커넥션을 제거해준다.

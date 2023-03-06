@@ -57,6 +57,7 @@ public class SpringExceptionTranslatorTest {
             assertThat(e.getErrorCode()).isEqualTo(42122);
             //여기서 부터 이제 스프링이 제공하는 예외 변환기
             SQLErrorCodeSQLExceptionTranslator exTranslator = new SQLErrorCodeSQLExceptionTranslator(dataSource);
+            //dataSource를 넣어준건 어떤 디비를 쓰는지 정보도 봐야하기 때문이다.
 
             DataAccessException resultEx = exTranslator.translate("select", sql, e);//이렇게 하면 SQLException을 분석해서 DataAccessException을 반환해준다.
             //반환 타입이 DataAccessException이지만, 실제로는 BadSqlGrammarException예외가 반환된다.

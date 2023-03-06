@@ -56,7 +56,7 @@ public class MemberRepositoryV5 implements MemberRepository{
         return member;
 
     }
-
+    //조회 부분은 RowMapper가 필요하다.
     private RowMapper<Member> memberRowMapper() {
         //rs 는 resultSet (반환은 ResultSet 이다. select 쿼리의 결과를 담고 있는 통.) Member클래스는 인스턴스 필드가 2개.
         //rowNum은 몇번째 로우인지 번호가 들어옴.

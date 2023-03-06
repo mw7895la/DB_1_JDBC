@@ -17,10 +17,12 @@ public class MemberRepositoryV0 {
         String sql = "insert into member(member_id,money) values(?,?)";
 
         Connection con = null;      //Connection이 있어야 연결을 하지
-        PreparedStatement pstmt = null;     //DB에 쿼리를 날린다.      //PreparedStatement 인터페이스다 이것의 부모는 Statement다 // ?를 통한 파라미터 바인딩을 가능하게 해줌.
+        PreparedStatement pstmt = null;     //DB에 쿼리를 날린다.
+        // PreparedStatement 인터페이스다 이것의 부모는 Statement다 // ?를 통한 파라미터 바인딩을 가능하게 해줌.
+        // statement를 상속받는 인터페이스로 SQL구문을 실행시키는 기능을 갖는 객체
         try{
             con = getConnection();      //DriverManager를 통해서 커넥션을 획득하게 된다.
-            pstmt = con.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);  // PreparedStatement 객체 생성시 인자값으로 실행할 sql문을 지정해야 한다.
             pstmt.setString(1,member.getMemberId());  //여기는 파라미터 바인딩을 하는 곳 위의 (?, ?)  첫번째 자리의 index는 1
             pstmt.setInt(2, member.getMoney());     // 2번째 자리의 index는 2
             pstmt.executeUpdate();      // 위에 준비된게 DB에 실행이 된다. 얘가 숫자를 반환하는데  영향받은 row 수만큼 반환해준다.

@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 public class MemberRepositoryV1 {
 
     //스프링에는 기본적으로 DataSource의 구현체로 HikariCP가 빈으로 등록되어있고, 그것이 주입된다.
-    //여기서는 DataSource가 스프링 컨테이너가 구동 시 설정파일을 확인하고 자동으로 빈으로 생성한다.
+    //여기서는 DataSource를 스프링 컨테이너가 구동 시 설정파일을 확인하고 자동으로 빈으로 생성한다.
     private final DataSource dataSource;
 
     @Autowired
